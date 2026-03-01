@@ -63,7 +63,8 @@ from voice_mode.config import (
     MP3_BITRATE,
     CONCH_ENABLED,
     CONCH_TIMEOUT,
-    CONCH_CHECK_INTERVAL
+    CONCH_CHECK_INTERVAL,
+    STT_MODEL
 )
 import voice_mode.config
 from voice_mode.provider_discovery import provider_registry
@@ -375,7 +376,7 @@ async def get_stt_config(provider: Optional[str] = None):
     # Return simplified configuration
     return {
         'base_url': base_url,
-        'model': 'whisper-1',
+        'model': STT_MODEL,
         'provider': 'whisper-local' if '127.0.0.1' in base_url or 'localhost' in base_url else 'openai-whisper',
         'provider_type': provider_type
     }
@@ -592,7 +593,7 @@ async def speech_to_text(
             with open(tmp_path, 'rb') as audio_file:
                 result = await simple_stt_failover(
                     audio_file=audio_file,
-                    model="whisper-1"
+                    model=STT_MODEL
                 )
         finally:
             # Clean up temp file (we keep the WAV)
@@ -613,7 +614,7 @@ async def speech_to_text(
             with open(tmp_path, 'rb') as audio_file:
                 result = await simple_stt_failover(
                     audio_file=audio_file,
-                    model="whisper-1"
+                    model=STT_MODEL
                 )
         finally:
             # Clean up temp file
@@ -957,7 +958,7 @@ def record_audio_with_silence_detection(max_duration: float, disable_silence_det
                                     logger.info(f"[VAD_DEBUG] Accumulating silence: {silence_duration_ms}/{SILENCE_THRESHOLD_MS}ms, t={recording_duration:.1f}s")
                                 elif silence_duration_ms % 200 == 0:  # Log every 200ms
                                     logger.debug(f"Silence: {silence_duration_ms}ms")
-                                
+
                                 # Check if we should stop due to silence threshold
                                 # Use the larger of MIN_RECORDING_DURATION (global) or min_duration (parameter)
                                 effective_min_duration = max(MIN_RECORDING_DURATION, min_duration)
@@ -1807,7 +1808,7 @@ consult the MCP resources listed above.
                     
                     conversation_logger.log_stt(
                         text=response_text if response_text else "[no speech detected]",
-                        model=stt_config.get('model', 'whisper-1'),
+                        model=stt_config.get('model', STT_MODEL),
                         provider=stt_config.get('provider', 'openai'),
                         provider_url=stt_config.get('base_url'),
                         provider_type=stt_config.get('provider_type'),
@@ -1889,7 +1890,7 @@ consult the MCP resources listed above.
                         "transport": transport,
                         "voice": voice,
                         "model": tts_model,
-                        "stt_model": "whisper-1",  # Default STT model
+                        "stt_model": STT_MODEL,
                         "timing": timing_str,
                         "timestamp": datetime.now().isoformat()
                     }

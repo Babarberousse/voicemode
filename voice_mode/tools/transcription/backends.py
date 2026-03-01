@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Dict, Any, Optional, List
 import httpx
 
-from voice_mode.config import OPENAI_API_KEY
+from voice_mode.config import OPENAI_API_KEY, STT_MODEL
 from .types import TranscriptionResult
 
 
@@ -16,7 +16,7 @@ async def transcribe_with_openai(
     audio_path: Path,
     word_timestamps: bool = False,
     language: Optional[str] = None,
-    model: str = "whisper-1"
+    model: str = STT_MODEL
 ) -> TranscriptionResult:
     """
     Transcribe using OpenAI API with optional word-level timestamps.

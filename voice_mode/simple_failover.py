@@ -11,7 +11,7 @@ from openai import AsyncOpenAI
 from .openai_error_parser import OpenAIErrorParser
 from .provider_discovery import is_local_provider
 
-from .config import TTS_BASE_URLS, STT_BASE_URLS, OPENAI_API_KEY, STT_PROMPT
+from .config import TTS_BASE_URLS, STT_BASE_URLS, OPENAI_API_KEY, STT_PROMPT, STT_MODEL
 from .provider_discovery import detect_provider_type
 
 logger = logging.getLogger("voicemode")
@@ -157,7 +157,7 @@ async def simple_tts_failover(
 
 async def simple_stt_failover(
     audio_file,
-    model: str = "whisper-1",
+    model: str = STT_MODEL,
     **kwargs
 ) -> Optional[Dict[str, Any]]:
     """

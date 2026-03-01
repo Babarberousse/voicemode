@@ -6,6 +6,8 @@ import asyncio
 from pathlib import Path
 from typing import Optional
 
+from voice_mode.config import STT_MODEL
+
 
 @click.group()
 def transcribe():
@@ -31,7 +33,7 @@ def transcribe():
 )
 @click.option('--output', '-o', type=click.Path(), help='Save transcription to file')
 @click.option('--language', help='Language code (e.g., en, es, fr)')
-@click.option('--model', default='whisper-1', help='Model to use (for OpenAI backend)')
+@click.option('--model', default=STT_MODEL, help='Model to use (for OpenAI backend)')
 def audio_command(
     audio_file: str,
     words: bool,
@@ -120,7 +122,7 @@ def audio_command(
 )
 @click.option('--output', '-o', type=click.Path(), help='Save to file')
 @click.option('--language', help='Language code')
-@click.option('--model', default='whisper-1', help='Model to use')
+@click.option('--model', default=STT_MODEL, help='Model to use')
 def transcribe_audio_command(
     audio_file: str,
     words: bool,

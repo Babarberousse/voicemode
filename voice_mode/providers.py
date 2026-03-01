@@ -9,7 +9,7 @@ import logging
 from typing import Dict, Optional, List, Any, Tuple
 from openai import AsyncOpenAI
 
-from .config import TTS_VOICES, TTS_MODELS, TTS_BASE_URLS, OPENAI_API_KEY, get_voice_preferences
+from .config import TTS_VOICES, TTS_MODELS, TTS_BASE_URLS, OPENAI_API_KEY, get_voice_preferences, STT_MODEL
 from .provider_discovery import provider_registry, EndpointInfo, is_local_provider
 
 logger = logging.getLogger("voicemode")
@@ -183,7 +183,7 @@ async def get_stt_client(
         if not endpoint_info:
             raise ValueError(f"Requested base URL {base_url} is not configured")
 
-        selected_model = model or "whisper-1"  # Default STT model
+        selected_model = model or STT_MODEL  # Default STT model
 
         # Disable retries for local endpoints - they either work or don't
         max_retries = 0 if is_local_provider(base_url) else 2
@@ -201,7 +201,7 @@ async def get_stt_client(
         raise ValueError("No STT endpoints available")
 
     endpoint_info = endpoints[0]
-    selected_model = model or "whisper-1"
+    selected_model = model or STT_MODEL
     
     api_key = OPENAI_API_KEY if endpoint_info.provider_type == "openai" else (OPENAI_API_KEY or "dummy-key-for-local")
     # Disable retries for local endpoints - they either work or don't

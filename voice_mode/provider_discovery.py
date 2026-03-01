@@ -19,7 +19,7 @@ import httpx
 from openai import AsyncOpenAI
 
 from . import config
-from .config import TTS_BASE_URLS, STT_BASE_URLS, OPENAI_API_KEY
+from .config import TTS_BASE_URLS, STT_BASE_URLS, OPENAI_API_KEY, STT_MODEL
 
 logger = logging.getLogger("voicemode")
 
@@ -105,7 +105,7 @@ class ProviderRegistry:
                 provider_type = detect_provider_type(url)
                 self.registry["stt"][url] = EndpointInfo(
                     base_url=url,
-                    models=["whisper-1"],
+                    models=[STT_MODEL],
                     voices=[],  # STT doesn't have voices
                     provider_type=provider_type
                 )
@@ -168,13 +168,13 @@ class ProviderRegistry:
                                 response = await http_client.get(base_url.rstrip('/v1'))
                                 if response.status_code == 200:
                                     logger.debug(f"Local whisper endpoint {base_url} is responding")
-                                    models = ["whisper-1"]  # Default model name
+                                    models = [STT_MODEL]  # Default model name
                                 else:
                                     raise Exception(f"Whisper endpoint returned status {response.status_code}")
                         else:
                             # For OpenAI, models.list failure likely means auth issue
                             # We'll still mark it as healthy since the endpoint exists
-                            models = ["whisper-1"]  # OpenAI's whisper model
+                            models = [STT_MODEL]  # OpenAI's whisper model
                             logger.debug(f"Assuming OpenAI whisper endpoint {base_url} is available")
                     except Exception as health_error:
                         logger.debug(f"STT health check failed for {base_url}: {health_error}")
@@ -182,7 +182,7 @@ class ProviderRegistry:
             
             # Ensure STT endpoints have at least the default whisper model
             if service_type == "stt" and not models:
-                models = ["whisper-1"]
+                models = [STT_MODEL]
             
             # For TTS, discover voices
             voices = []

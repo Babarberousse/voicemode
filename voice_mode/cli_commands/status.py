@@ -23,6 +23,7 @@ from voice_mode.config import (
     KOKORO_PORT,
     TTS_VOICES,
     OPENAI_API_KEY,
+    STT_MODEL,
     env_bool,
 )
 from voice_mode.utils.services.common import find_process_by_port, check_service_status
@@ -382,7 +383,7 @@ def check_openai_api() -> Dict[str, Any]:
         "status": "available" if api_key_set else "not_configured",
         "api_key_set": api_key_set,
         "tts_model": "tts-1-hd",
-        "stt_model": "whisper-1"
+        "stt_model": STT_MODEL
     }
 
 

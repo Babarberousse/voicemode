@@ -11,6 +11,7 @@ from .backends import (
     transcribe_with_whisper_cpp
 )
 from .formats import convert_to_format
+from voice_mode.config import STT_MODEL
 
 
 async def transcribe_audio(
@@ -19,11 +20,11 @@ async def transcribe_audio(
     backend: TranscriptionBackend = TranscriptionBackend.OPENAI,
     output_format: OutputFormat = OutputFormat.JSON,
     language: Optional[str] = None,
-    model: str = "whisper-1"
+    model: str = STT_MODEL
 ) -> TranscriptionResult:
     """
     Transcribe audio with optional word-level timestamps.
-    
+
     This is the main API entry point for VoiceMode transcription.
     
     Args:
@@ -119,7 +120,7 @@ def transcribe_audio_sync(
     backend: TranscriptionBackend = TranscriptionBackend.OPENAI,
     output_format: OutputFormat = OutputFormat.JSON,
     language: Optional[str] = None,
-    model: str = "whisper-1"
+    model: str = STT_MODEL
 ) -> TranscriptionResult:
     """
     Synchronous wrapper for transcribe_audio.
